@@ -19,6 +19,16 @@ namespace WebServer.Logic
         private const string selectCommand =
             @"SELECT * FROM [User]";
 
+        private const string getCommand =
+            @"SELECT * FROM [User] WHERE ID = @ID";
+
+        private const string updateCommand =
+            @"UPDATE [User] SET Role = @Role, Email = @Email, FirstName = @FirstName, 
+              LastName = @LastName, Password = @Password WHERE ID = @ID";
+
+        private const string deleteCommand =
+            @"DELETE FROM [User] WHERE ID = @ID";
+
         public bool Create(User user)
         {
             using (SqlConnection connection =
@@ -26,6 +36,27 @@ namespace WebServer.Logic
             {
                 // Create the Command and Parameter objects.
                 SqlCommand command = new SqlCommand(insertCommand, connection);
+                command.Parameters.AddWithValue("@Role", user.Role);
+                command.Parameters.AddWithValue("@Email", user.Email);
+                command.Parameters.AddWithValue("@FirstName", user.FirstName);
+                command.Parameters.AddWithValue("@LastName", user.LastName);
+                command.Parameters.AddWithValue("@Password", user.Password);
+
+                connection.Open();
+                var result = command.ExecuteNonQuery();
+
+                return result > 0;
+            }
+        }
+
+        public bool Update(int id, User user)
+        {
+            using (SqlConnection connection =
+                new SqlConnection(connectionString))
+            {
+                // Create the Command and Parameter objects.
+                SqlCommand command = new SqlCommand(updateCommand, connection);
+                command.Parameters.AddWithValue("@ID", id);
                 command.Parameters.AddWithValue("@Role", user.Role);
                 command.Parameters.AddWithValue("@Email", user.Email);
                 command.Parameters.AddWithValue("@FirstName", user.FirstName);
@@ -70,7 +101,44 @@ namespace WebServer.Logic
         {
             var user = new User();
 
+            using (SqlConnection connection =
+                new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(getCommand, connection);
+                command.Parameters.AddWithValue("@ID", id);
+
+                connection.Open();
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                // Call Read before accessing data.
+                while (reader.Read())
+                {
+                    user = LoadRow((IDataRecord)reader);
+                }
+
+                // Call Close when done reading.
+                reader.Close();
+            }
+
             return user;
+        }
+
+
+        public bool Delete(int id)
+        {
+            using (SqlConnection connection =
+                new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(deleteCommand, connection);
+                command.Parameters.AddWithValue("@ID", id);
+
+                connection.Open();
+
+                var result = command.ExecuteNonQuery();
+
+                return result > 0;
+            }
         }
 
         private User LoadRow(IDataRecord row)

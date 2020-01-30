@@ -35,11 +35,19 @@ namespace WebServer.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] User value)
         {
+            var service = new UserService();
+            bool result = service.Update(id, value);
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
+            var service = new UserService();
+            bool result = service.Delete(id);
+            if (!result)
+                return NotFound();
+            else
+                return Ok();
         }
     }
 }

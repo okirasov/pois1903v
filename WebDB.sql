@@ -6,4 +6,15 @@
 	FirstName NVARCHAR(50) NULL,
 	LastName NVARCHAR(50) NULL,
 	Password NVARCHAR(50) NOT NULL
-)
+);
+
+
+ALTER TABLE [User] ADD Country nvarchar(10) NULL;
+
+
+CREATE TABLE [dbo].[Company]
+(
+	Id INT NOT NULL PRIMARY KEY IDENTITY,
+	Name NVARCHAR(50) NOT NULL,
+	Address NVARCHAR(50) NULL
+);

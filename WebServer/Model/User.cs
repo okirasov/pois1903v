@@ -16,5 +16,9 @@ namespace WebServer.Model
         public string LastName;
 
         public string Password;
+
+        public string Country;
+
+//        public Company Company;
     }
 }
