@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace WebServer.Model
 {
-    public class Company : Entity
+    public abstract class Entity
     {
-        public string Name;
-
-        public string Address;
+        public int ID;
     }
 }

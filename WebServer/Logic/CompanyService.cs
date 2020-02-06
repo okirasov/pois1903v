@@ -7,82 +7,44 @@ using WebServer.Model;
 
 namespace WebServer.Logic
 {
-    public class CompanyService
+    public class CompanyService : EntityService<Company>
     {
-        private const string connectionString =
-            @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=WebDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-
         private const string insertCommand =
             @"INSERT INTO [Company] (Name, Address)
               VALUES (@Name, @Address)";
 
-        private const string selectCommand =
-            @"SELECT * FROM [Company]";
-
-        private const string getCommand =
-            @"SELECT * FROM [Company] WHERE ID = @ID";
-
         private const string updateCommand =
-            @"UPDATE [Company] SET Name = @Name, Address = @Address WHERE ID = @ID";
-
-        private const string deleteCommand =
-            @"DELETE FROM [Company] WHERE ID = @ID";
+            @"UPDATE [Company] SET Name = @Name, 
+              Address = @Address WHERE ID = @ID";
 
 
-        public List<Company> Get()
+        protected override SqlCommand GetInsertCommand(Company company)
         {
-            var list = new List<Company>();
+            SqlCommand command = new SqlCommand(insertCommand);
+            command.Parameters.AddWithValue("@Name", company.Name);
+            command.Parameters.AddWithValue("@Address", company.Address);
 
+            return command;
+        }
+
+        public bool Update(int id, Company company)
+        {
             using (SqlConnection connection =
                 new SqlConnection(connectionString))
             {
-                SqlCommand command = new SqlCommand(selectCommand, connection);
+                // Create the Command and Parameter objects.
+                SqlCommand command = new SqlCommand(updateCommand, connection);
+                command.Parameters.AddWithValue("@Name", company.Name);
+                command.Parameters.AddWithValue("@Address", company.Address);
 
                 connection.Open();
+                var result = command.ExecuteNonQuery();
 
-                SqlDataReader reader = command.ExecuteReader();
-
-                // Call Read before accessing data.
-                while (reader.Read())
-                {
-                    var company = LoadRow((IDataRecord)reader);
-                    list.Add(company);
-                }
-
-                // Call Close when done reading.
-                reader.Close();
+                return result > 0;
             }
-
-            return list;
         }
 
-        public Company Get(int id)
-        {
-            var company = new Company();
-
-            using (SqlConnection connection =
-                new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(getCommand, connection);
-                command.Parameters.AddWithValue("@ID", id);
-
-                connection.Open();
-
-                SqlDataReader reader = command.ExecuteReader();
-
-                // Call Read before accessing data.
-                while (reader.Read())
-                {
-                    company = LoadRow((IDataRecord)reader);
-                }
-
-                // Call Close when done reading.
-                reader.Close();
-            }
-
-            return company;
-        }
-        private Company LoadRow(IDataRecord row)
+        protected override Company LoadRow(IDataRecord row)
         {
             Company company = new Company();
 

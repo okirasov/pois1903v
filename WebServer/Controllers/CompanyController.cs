@@ -24,5 +24,31 @@ namespace WebServer.Controllers
         {
             return new CompanyService().Get(id);
         }
+
+        [HttpPost]
+        public void Post([FromBody] Company value)
+        {
+            var service = new CompanyService();
+            bool result = service.Create(value);
+
+        }
+
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] Company value)
+        {
+            var service = new CompanyService();
+            bool result = service.Update(id, value);
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            var service = new CompanyService();
+            bool result = service.Delete(id);
+            if (!result)
+                return NotFound();
+            else
+                return Ok();
+        }
     }
 }

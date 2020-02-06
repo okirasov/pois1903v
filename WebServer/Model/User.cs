@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace WebServer.Model
 {
-    public class User
+    public class User : Entity
     {
-        public int ID;
-
         public int Role;
 
         public string Email;
