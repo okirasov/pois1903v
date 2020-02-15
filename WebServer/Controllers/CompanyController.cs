@@ -30,7 +30,6 @@ namespace WebServer.Controllers
         {
             var service = new CompanyService();
             bool result = service.Create(value);
-
         }
 
         [HttpPut("{id}")]

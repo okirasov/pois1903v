@@ -9,39 +9,28 @@ namespace WebServer.Logic
 {
     public class CompanyService : EntityService<Company>
     {
-        private const string insertCommand =
-            @"INSERT INTO [Company] (Name, Address)
-              VALUES (@Name, @Address)";
-
-        private const string updateCommand =
-            @"UPDATE [Company] SET Name = @Name, 
-              Address = @Address WHERE ID = @ID";
-
-
-        protected override SqlCommand GetInsertCommand(Company company)
+        protected override string insertCommand
         {
-            SqlCommand command = new SqlCommand(insertCommand);
-            command.Parameters.AddWithValue("@Name", company.Name);
-            command.Parameters.AddWithValue("@Address", company.Address);
-
-            return command;
+            get
+            {
+                return @"INSERT INTO [Company] (Name, Address)
+              VALUES (@Name, @Address)";
+            }
         }
 
-        public bool Update(int id, Company company)
+        protected override string updateCommand
         {
-            using (SqlConnection connection =
-                new SqlConnection(connectionString))
+            get
             {
-                // Create the Command and Parameter objects.
-                SqlCommand command = new SqlCommand(updateCommand, connection);
-                command.Parameters.AddWithValue("@Name", company.Name);
-                command.Parameters.AddWithValue("@Address", company.Address);
-
-                connection.Open();
-                var result = command.ExecuteNonQuery();
-
-                return result > 0;
+                return @"UPDATE [Company] SET Name = @Name, 
+              Address = @Address WHERE ID = @ID";
             }
+        }
+
+        protected override void AddParameters(SqlCommand command, Company entity)
+        {
+            command.Parameters.AddWithValue("@Name", entity.Name);
+            command.Parameters.AddWithValue("@Address", entity.Address);
         }
 
         protected override Company LoadRow(IDataRecord row)

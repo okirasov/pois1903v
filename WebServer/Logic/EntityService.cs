@@ -22,6 +22,10 @@ namespace WebServer.Logic
         private const string deleteCommand =
             @"DELETE FROM [{0}] WHERE ID = @ID";
 
+        protected abstract string insertCommand { get; }
+
+        protected abstract string updateCommand { get; }
+
         protected string FormatQuery(string query)
         {
             var type = typeof(T).Name;
@@ -30,7 +34,8 @@ namespace WebServer.Logic
 
         protected abstract T LoadRow(IDataRecord row);
 
-        protected abstract SqlCommand GetInsertCommand(T entity);
+        protected abstract void AddParameters
+            (SqlCommand command, T entity);
 
         public List<T> Get()
         {
@@ -109,8 +114,27 @@ namespace WebServer.Logic
                 new SqlConnection(connectionString))
             {
                 // Create the Command and Parameter objects.
-                SqlCommand command = GetInsertCommand(entity);
-                command.Connection = connection;
+                SqlCommand command = new SqlCommand(insertCommand, connection);
+
+                AddParameters(command, entity);
+
+                connection.Open();
+                var result = command.ExecuteNonQuery();
+
+                return result > 0;
+            }
+        }
+
+        public bool Update(int id, T entity)
+        {
+            using (SqlConnection connection =
+                new SqlConnection(connectionString))
+            {
+                // Create the Command and Parameter objects.
+                SqlCommand command = new SqlCommand(updateCommand, connection);
+                command.Parameters.AddWithValue("@ID", id);
+
+                AddParameters(command, entity);
 
                 connection.Open();
                 var result = command.ExecuteNonQuery();
