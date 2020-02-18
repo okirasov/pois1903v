@@ -34,7 +34,7 @@ CREATE TABLE [dbo].[Order]
     [OrderID] NVARCHAR(50) NOT NULL,
     [CreateDate] DATETIME NOT NULL,
     [ShipDate] DATETIME NULL,
-    [Price] DECIMAL NOT NULL, 
+    [Price] DECIMAL (18,2) NOT NULL, 
     [ProductID] INT NOT NULL REFERENCES [Product] (ID), 
     PRIMARY KEY CLUSTERED ([ID] ASC)
 )
