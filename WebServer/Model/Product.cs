@@ -13,5 +13,7 @@ namespace WebServer.Model
         public decimal Price { get; set; }
 
         public int CompanyID { get; set; }
+
+        public Company Company { get; set; }
     }
 }
