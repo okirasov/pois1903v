@@ -14,35 +14,43 @@ namespace WebServer.Controllers
     public class OrderController : ControllerBase
     {
         [HttpGet]
-        public ActionResult<IEnumerable<Company>> Get()
+        public ActionResult<IEnumerable<Order>> Get()
         {
-            return new CompanyService().Get();
+            return new OrderService().Get();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Company> Get(int id)
+        public ActionResult<Order> Get(int id)
         {
-            return new CompanyService().Get(id);
+            return new OrderService().Get(id);
         }
 
         [HttpPost]
-        public void Post([FromBody] Company value)
+        public ActionResult Post([FromBody] Order value)
         {
-            var service = new CompanyService();
+            var service = new OrderService();
+            // validate Product
+            var product = new ProductService().Get(value.ProductID);
+            if (product == null)
+            {
+                return NotFound("Product not found");
+            }
+
             bool result = service.Create(value);
+            return Ok("Success");
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Company value)
+        public void Put(int id, [FromBody] Order value)
         {
-            var service = new CompanyService();
+            var service = new OrderService();
             bool result = service.Update(id, value);
         }
 
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            var service = new CompanyService();
+            var service = new OrderService();
             bool result = service.Delete(id);
             if (!result)
                 return NotFound();

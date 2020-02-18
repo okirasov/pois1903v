@@ -13,8 +13,8 @@ namespace WebServer.Logic
         {
             get
             {
-                return @"INSERT INTO [Product] (Name, Address)
-              VALUES (@Name, @Address)";
+                return @"INSERT INTO [Product] (Name, Price, CompanyID)
+              VALUES (@Name, @Price, @CompanyID)";
             }
         }
 
@@ -22,15 +22,16 @@ namespace WebServer.Logic
         {
             get
             {
-                return @"UPDATE [Product] SET Name = @Name, 
-              Address = @Address WHERE ID = @ID";
+                return @"UPDATE [Product] SET Name = @Name, Price = @Price,
+              CompanyID = @CompanyID WHERE ID = @ID";
             }
         }
 
         protected override void AddParameters(SqlCommand command, Product entity)
         {
             command.Parameters.AddWithValue("@Name", entity.Name);
-            command.Parameters.AddWithValue("@Address", entity.Address);
+            command.Parameters.AddWithValue("@Price", entity.Price);
+            command.Parameters.AddWithValue("@CompanyID", entity.CompanyID);
         }
 
         protected override Product LoadRow(IDataRecord row)
@@ -39,10 +40,10 @@ namespace WebServer.Logic
 
             Product.ID = Convert.ToInt32(row["ID"]);
             Product.Name = Convert.ToString(row["Name"]);
-            Product.Address = Convert.ToString(row["Address"]);
+            Product.Price = Convert.ToDecimal(row["Price"]);
+            Product.CompanyID = Convert.ToInt32(row["CompanyID"]);
 
             return Product;
         }
     }
-}
 }

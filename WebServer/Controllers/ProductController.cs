@@ -14,35 +14,35 @@ namespace WebServer.Controllers
     public class ProductController : ControllerBase
     {
         [HttpGet]
-        public ActionResult<IEnumerable<Company>> Get()
+        public ActionResult<IEnumerable<Product>> Get()
         {
-            return new CompanyService().Get();
+            return new ProductService().Get();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Company> Get(int id)
+        public ActionResult<Product> Get(int id)
         {
-            return new CompanyService().Get(id);
+            return new ProductService().Get(id);
         }
 
         [HttpPost]
-        public void Post([FromBody] Company value)
+        public void Post([FromBody] Product value)
         {
-            var service = new CompanyService();
+            var service = new ProductService();
             bool result = service.Create(value);
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Company value)
+        public void Put(int id, [FromBody] Product value)
         {
-            var service = new CompanyService();
+            var service = new ProductService();
             bool result = service.Update(id, value);
         }
 
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            var service = new CompanyService();
+            var service = new ProductService();
             bool result = service.Delete(id);
             if (!result)
                 return NotFound();
