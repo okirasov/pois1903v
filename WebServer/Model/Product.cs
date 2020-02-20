@@ -16,4 +16,19 @@ namespace WebServer.Model
 
         public Company Company { get; set; }
     }
+
+
+    public class ProductDTO
+    {
+        public int ID { get; set; }
+
+        public string Name { get; set; }
+
+        public decimal Price { get; set; }
+
+        public int CompanyID { get; set; }
+
+        public string CompanyName { get; set; }
+    }
+
 }

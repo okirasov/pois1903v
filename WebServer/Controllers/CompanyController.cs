@@ -20,9 +20,26 @@ namespace WebServer.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Company> Get(int id)
+        public ActionResult<CompanyDTO> Get(int id)
         {
-            return new CompanyService().Get(id);
+            var company = new CompanyService().Get(id);
+            if (company == null)
+                return NotFound();
+
+            var products = new ProductService().Get()
+                .Where(i => i.CompanyID == company.ID);
+
+            var dto = new CompanyDTO
+            {
+                ID = company.ID,
+                Name = company.Name,
+                Address = company.Address,
+                ProductList = string.Join(";", products.Select(i => i.Name)),
+                ProductCount = products.Count()
+            };
+
+            return dto;
+
         }
 
         [HttpPost]
