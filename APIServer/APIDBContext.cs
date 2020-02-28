@@ -5,13 +5,13 @@ namespace APIServer
 {
     public class APIDBContext : DbContext
     {
+        public APIDBContext(DbContextOptions<APIDBContext> opts) : base(opts) { }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Company> Companies { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(
-                @"Server=(localdb)\mssqllocaldb;Database=APIDB;Integrated Security=True");
-        }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
     }
+
+
 }

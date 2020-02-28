@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200228172107_Update.cs" />
+    <Compile Remove="Migrations\20200228172107_Update.Designer.cs" />
+    <Compile Remove="Migrations\20200228172710_Update.cs" />
+    <Compile Remove="Migrations\20200228172710_Update.Designer.cs" />
+    <Compile Remove="Migrations\20200228173027_Update.cs" />
+    <Compile Remove="Migrations\20200228173027_Update.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -13,6 +22,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.14" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
