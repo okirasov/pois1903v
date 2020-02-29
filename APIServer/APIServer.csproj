@@ -11,6 +11,8 @@
     <Compile Remove="Migrations\20200228172710_Update.Designer.cs" />
     <Compile Remove="Migrations\20200228173027_Update.cs" />
     <Compile Remove="Migrations\20200228173027_Update.Designer.cs" />
+    <Compile Remove="Migrations\20200229114701_SeedData.cs" />
+    <Compile Remove="Migrations\20200229114701_SeedData.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
