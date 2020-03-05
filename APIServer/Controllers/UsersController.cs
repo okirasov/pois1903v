@@ -118,6 +118,21 @@ namespace APIServer.Controllers
             return Ok(user);
         }
 
+
+        [HttpGet("login")]
+        public async Task<IActionResult> Login(string email, string password)
+        {
+            var user = await _context.Users
+                .Where(u => u.Email == email && u.Password == password)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+                return NotFound("Failed login");
+            else
+                return Ok("Success login");
+        }
+
+
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.ID == id);
