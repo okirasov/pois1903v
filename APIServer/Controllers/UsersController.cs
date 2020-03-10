@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIServer;
 using APIServer.Model;
+using APIServer.DTO;
 
 namespace APIServer.Controllers
 {
@@ -23,9 +24,19 @@ namespace APIServer.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public IEnumerable<User> GetUsers()
+        public IEnumerable<UserDTO> GetUsers()
         {
-            return _context.Users;
+            return _context.Users.Include(u => u.Company)
+                .Select(u =>
+                    new UserDTO()
+                        {
+                            ID = u.ID,
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            Email = u.Email,
+                            CompanyID = u.Company.ID,
+                            CompanyName = u.Company.Name
+                        }).ToList();
         }
 
         // GET: api/Users/5
@@ -44,7 +55,17 @@ namespace APIServer.Controllers
                 return NotFound();
             }
 
-            return Ok(user);
+            var dto = new UserDTO
+            {
+                ID = user.ID,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                CompanyID = user.Company.ID,
+                CompanyName = user.Company.Name
+            };
+
+            return Ok(dto);
         }
 
         // PUT: api/Users/5

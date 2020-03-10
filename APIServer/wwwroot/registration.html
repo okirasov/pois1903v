@@ -8,7 +8,28 @@
 </head>
 <body>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+    <script>
 
+        function register() {
+
+            var data = $('#regform').serializeArray();
+
+            $.ajax(
+                {
+                    url: 'api/users',
+                    type: 'POST',
+                    dataType: 'application/json',
+                    data: data,
+                    success: function (data) {
+                        window.location.href = 'index.html';
+                    },
+                    error: function (jqXHR, textStatus, err) {
+                        window.location.href = 'registration.html';
+                    }
+                });
+        }
+
+    </script>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -18,20 +39,20 @@
                         <h4 class="card-title mt-2">Sign up</h4>
                     </header>
                     <article class="card-body">
-                        <form>
+                        <form id="regform">
                             <div class="form-row">
                                 <div class="col form-group">
                                     <label>First name </label>
-                                    <input type="text" class="form-control" placeholder="">
+                                    <input name="FirstName" type="text" class="form-control" placeholder="">
                                 </div> <!-- form-group end.// -->
                                 <div class="col form-group">
                                     <label>Last name</label>
-                                    <input type="text" class="form-control" placeholder=" ">
+                                    <input name="LastName" type="text" class="form-control" placeholder=" ">
                                 </div> <!-- form-group end.// -->
                             </div> <!-- form-row end.// -->
                             <div class="form-group">
                                 <label>Email address</label>
-                                <input type="email" class="form-control" placeholder="">
+                                <input name="Email" type="email" class="form-control" placeholder="">
                                 <small class="form-text text-muted">We'll never share your email with anyone else.</small>
                             </div> <!-- form-group end.// -->
                             <div class="form-group">
@@ -51,7 +72,7 @@
                                 </div> <!-- form-group end.// -->
                                 <div class="form-group col-md-6">
                                     <label>Country</label>
-                                    <select id="inputState" class="form-control">
+                                    <select id="inputState" name="Country" class="form-control">
                                         <option> Choose...</option>
                                         <option>Uzbekistan</option>
                                         <option>Russia</option>
@@ -63,13 +84,13 @@
                             </div> <!-- form-row.// -->
                             <div class="form-group">
                                 <label>Create password</label>
-                                <input class="form-control" type="password">
+                                <input name="Password" class="form-control" type="password">
                             </div> <!-- form-group end.// -->
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-block"> Register  </button>
-                            </div> <!-- form-group// -->
                             <small class="text-muted">By clicking the 'Sign Up' button, you confirm that you accept our <br> Terms of use and Privacy Policy.</small>
                         </form>
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-block" onclick="register();"> Register  </button>
+                        </div> <!-- form-group// -->
                     </article> <!-- card-body end .// -->
                     <div class="border-top card-body text-center">Have an account? <a href="">Log In</a></div>
                 </div> <!-- card.// -->

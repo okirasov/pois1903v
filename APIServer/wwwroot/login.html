@@ -8,6 +8,28 @@
 </head>
 <body>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+    <script>
+
+        function login() {
+            var email = $('#email').val();
+            var password = $('#password').val();
+            var url = 'api/users/login?email=' + email + '&password=' + password;
+
+            $.ajax(
+                {
+                    url: url,
+                    type: 'GET',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        window.location.href = 'index.html';
+                    },
+                    error: function (jqXHR, textStatus, err) {
+                        window.location.href = 'registration.html';
+                    }
+                });
+        }
+
+    </script>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -25,7 +47,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                                     </div>
-                                    <input name="" class="form-control" placeholder="Email or login" type="email">
+                                    <input id="email" class="form-control" placeholder="Email" type="email">
                                 </div> <!-- input-group.// -->
                             </div> <!-- form-group// -->
                             <div class="form-group">
@@ -33,14 +55,14 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                                     </div>
-                                    <input class="form-control" placeholder="******" type="password">
+                                    <input id="password" class="form-control" placeholder="******" type="password">
                                 </div> <!-- input-group.// -->
-                            </div> <!-- form-group// -->
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-block"> Login  </button>
                             </div> <!-- form-group// -->
                             <p class="text-center"><a href="#" class="btn">Forgot password?</a></p>
                         </form>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block" onclick="login();"> Login  </button>
+                        </div> <!-- form-group// -->
                     </article>
                 </div>
             </div>
