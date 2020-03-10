@@ -24,12 +24,15 @@ namespace APIServer.DTO
 
         public UserDTO (User u)
         {
-            ID = u.ID;
-            FirstName = u.FirstName;
-            LastName = u.LastName;
-            Email = u.Email;
-            CompanyID = u.Company?.ID;
-            CompanyName = u.Company?.Name;
+            if (u != null)
+            {
+                ID = u.ID;
+                FirstName = u.FirstName;
+                LastName = u.LastName;
+                Email = u.Email;
+                CompanyID = u.Company?.ID;
+                CompanyName = u.Company?.Name;
+            }
         }
     }
 }

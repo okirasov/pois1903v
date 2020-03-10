@@ -16,10 +16,13 @@ namespace APIServer.DTO
 
         public CompanyDTO(Company c)
         {
-            ID = c.ID;
-            Name = c.Name;
-            Address = c.Address;
-            UsersCount = c.Users?.Count() ?? 0;
+            if (c != null)
+            {
+                ID = c.ID;
+                Name = c.Name;
+                Address = c.Address;
+                UsersCount = c.Users?.Count() ?? 0;
+            }
         }
     }
 }

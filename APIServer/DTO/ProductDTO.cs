@@ -16,10 +16,13 @@ namespace APIServer.DTO
 
         public ProductDTO(Product p)
         {
-            ID = p.ID;
-            Name = p.Name;
-            Price = p.Price;
-            CompanyID = p.Company?.ID;
+            if (p != null)
+            {
+                ID = p.ID;
+                Name = p.Name;
+                Price = p.Price;
+                CompanyID = p.Company?.ID;
+            }
         }
     }
 }
