@@ -52,51 +52,51 @@ namespace APIServer.Controllers
             return Ok(dto);
         }
 
-        // PUT: api/Users/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != user.ID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Users
         [HttpPost]
-        public async Task<IActionResult> PostUser([FromBody] User user)
+        public async Task<IActionResult> PostUser([FromBody] UserDTO dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Users.Add(user);
+            // for Update request only!!!
+            // check if User exists
+            if (dto.ID > 0 && !UserExists(dto.ID))
+            {
+                return NotFound();
+            }
+
+            var user = new User
+            {
+                ID = dto.ID,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Email = dto.Email
+            };
+
+            // Load Company
+            if (dto.CompanyID.HasValue)
+            {
+                var company = await _context.Companies.FindAsync(dto.CompanyID.Value);
+                if (company != null)
+                {
+                    user.Company = company;
+                }
+            }
+
+            // Update Request
+            if (dto.ID > 0)
+            {
+                _context.Entry(user).State = EntityState.Modified;
+            }
+            // Insert Request
+            else
+            {
+                _context.Users.Add(user);
+            }
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.ID }, user);
