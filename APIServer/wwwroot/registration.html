@@ -10,16 +10,26 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
     <script>
 
-        function register() {
+        function getFormData(formId) {
+            var inputs = $('#' + formId).serializeArray();
+            var data = {};
 
-            var data = $('#regform').serializeArray();
+            $.each(inputs, function (i, input) {
+                data[input.name] = input.value;
+            });
+
+            return data;
+        }
+
+        function register() {
+            var data = getFormData('regform');
 
             $.ajax(
                 {
                     url: 'api/users',
                     type: 'POST',
                     dataType: 'application/json',
-                    data: data,
+                    data: JSON.stringify(data),
                     success: function (data) {
                         window.location.href = 'index.html';
                     },
