@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using APIServer.Model;
 
 namespace APIServer.DTO
 {
@@ -11,6 +12,14 @@ namespace APIServer.DTO
 
         public decimal Price { get; set; }
 
-        public int CompanyID { get; set; }
+        public int? CompanyID { get; set; }
+
+        public ProductDTO(Product p)
+        {
+            ID = p.ID;
+            Name = p.Name;
+            Price = p.Price;
+            CompanyID = p.Company?.ID;
+        }
     }
 }

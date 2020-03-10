@@ -27,16 +27,7 @@ namespace APIServer.Controllers
         public IEnumerable<UserDTO> GetUsers()
         {
             return _context.Users.Include(u => u.Company)
-                .Select(u =>
-                    new UserDTO()
-                        {
-                            ID = u.ID,
-                            FirstName = u.FirstName,
-                            LastName = u.LastName,
-                            Email = u.Email,
-                            CompanyID = u.Company.ID,
-                            CompanyName = u.Company.Name
-                        }).ToList();
+                .Select(u => new UserDTO(u)).ToList();
         }
 
         // GET: api/Users/5
@@ -48,22 +39,15 @@ namespace APIServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.Include(u => u.Company)
+                .Where(u => u.ID == id).FirstOrDefaultAsync();
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            var dto = new UserDTO
-            {
-                ID = user.ID,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                CompanyID = user.Company.ID,
-                CompanyName = user.Company.Name
-            };
+            var dto = new UserDTO(user);
 
             return Ok(dto);
         }
