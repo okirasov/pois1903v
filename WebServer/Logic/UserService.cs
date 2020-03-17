@@ -4,10 +4,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using WebServer.Model;
+using WebServer.Interfaces;
 
 namespace WebServer.Logic
 {
-    public class UserService : EntityService<User>
+    public class UserService : EntityService<User>, IUserService
     {
         protected override string insertCommand
         {

@@ -63,3 +63,8 @@ APIServer/bin/Debug/netcoreapp2.1/APIServer.runtimeconfig.json
 .vs/APIServer/v15/Server/sqlite3/storage.ide
 .vs/APIServer/v15/Server/sqlite3/storage.ide-shm
 .vs/APIServer/v15/Server/sqlite3/storage.ide-wal
+.vs/APIServer/DesignTimeBuild/.dtbcache
+.vs/APIServer/v15/.suo
+.vs/APIServer/v15/Server/sqlite3/storage.ide
+.vs/APIServer/v15/Server/sqlite3/storage.ide-shm
+.vs/APIServer/v15/Server/sqlite3/storage.ide-wal

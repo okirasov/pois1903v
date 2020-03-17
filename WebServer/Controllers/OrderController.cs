@@ -6,27 +6,26 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebServer.Model;
 using WebServer.Logic;
+using WebServer.Interfaces;
 
 namespace WebServer.Controllers
 {
     [Route("api/orders")]
     [ApiController]
-    public class OrderController : ControllerBase
+    public class OrderController : BaseController<Order>
     {
-        [HttpGet]
-        public ActionResult<IEnumerable<Order>> Get()
+        public OrderController(IOrderService service) : base(service)
         {
-            return new OrderService().Get();
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<Order> Get(int id)
+        public IOrderService _service
         {
-            return new OrderService().Get(id);
+            get { return _entityService as IOrderService; }
         }
+
 
         [HttpPost]
-        public ActionResult Post([FromBody] Order value)
+        public override ActionResult Post([FromBody] Order value)
         {
             var service = new OrderService();
             // validate Product
@@ -38,24 +37,6 @@ namespace WebServer.Controllers
 
             bool result = service.Create(value);
             return Ok("Success");
-        }
-
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Order value)
-        {
-            var service = new OrderService();
-            bool result = service.Update(id, value);
-        }
-
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            var service = new OrderService();
-            bool result = service.Delete(id);
-            if (!result)
-                return NotFound();
-            else
-                return Ok();
         }
     }
 }

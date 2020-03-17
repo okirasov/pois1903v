@@ -6,17 +6,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebServer.Model;
 using WebServer.Logic;
+using WebServer.Interfaces;
 
 namespace WebServer.Controllers
 {
     [Route("api/products")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductController : BaseController<Product>
     {
-        [HttpGet]
-        public ActionResult<IEnumerable<Product>> Get()
+        public ProductController(IProductService service) : base(service)
         {
-            var products = new ProductService().Get();
+        }
+
+        public IProductService _service
+        {
+            get { return _entityService as IProductService; }
+        }
+
+        [HttpGet]
+        public override ActionResult<IEnumerable<Product>> Get()
+        {
+            var products = _service.Get();
             foreach (var product in products)
             {
                 product.Company = new CompanyService().Get(product.CompanyID);
@@ -26,40 +36,15 @@ namespace WebServer.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Product> Get(int id)
+        public override ActionResult<Product> Get(int id)
         {
-            var product = new ProductService().Get(id);
+            var product = _service.Get(id);
             if (product != null && product.CompanyID > 0)
             {
                 product.Company = new CompanyService().Get(product.CompanyID);
             }
 
             return product;
-        }
-
-        [HttpPost]
-        public void Post([FromBody] Product value)
-        {
-            var service = new ProductService();
-            bool result = service.Create(value);
-        }
-
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Product value)
-        {
-            var service = new ProductService();
-            bool result = service.Update(id, value);
-        }
-
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            var service = new ProductService();
-            bool result = service.Delete(id);
-            if (!result)
-                return NotFound();
-            else
-                return Ok();
         }
     }
 }
