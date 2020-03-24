@@ -20,17 +20,34 @@ namespace APIServer.Services
 
         public async Task<List<CompanyDTO>> Get()
         {
-            throw new NotImplementedException();
+            var companies = await _context.Companies.ToListAsync();
+            return companies.Select(u => new CompanyDTO(u)).ToList();
         }
 
         public async Task<CompanyDTO> Get(int id)
         {
-            throw new NotImplementedException();
+            var company = await _context.Companies.FindAsync(id);
+            if (company != null)
+                return new CompanyDTO(company);
+            else
+                return null;
         }
 
         public async Task<bool> Create(CompanyDTO dto)
         {
-            throw new NotImplementedException();
+            if (dto == null)
+                return false;
+
+            var company = new Company
+            {
+                Name = dto.Name,
+                Address = dto.Address
+            };
+
+            _context.Companies.Add(company);
+            var result = await _context.SaveChangesAsync();
+
+            return result > 0;
         }
 
         public async Task<bool> Update(int id, CompanyDTO dto)
