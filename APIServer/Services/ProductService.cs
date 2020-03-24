@@ -42,5 +42,10 @@ namespace APIServer.Services
         {
             throw new NotImplementedException();
         }
+        
+        public bool IsExist(int id)
+        {
+            return _context.Products.Any(e => e.ID == id);
+        }
     }
 }

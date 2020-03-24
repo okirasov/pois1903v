@@ -12,5 +12,8 @@ namespace APIServer.Interfaces
         Task<bool> Delete(int id);
         Task<bool> Create(DTO dto);
         Task<bool> Update(int id, DTO dto);
+
+        bool IsExist(int id);
+
     }
 }
