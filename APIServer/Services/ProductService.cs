@@ -20,7 +20,8 @@ namespace APIServer.Services
 
         public async Task<List<ProductDTO>> Get()
         {
-            throw new NotImplementedException();
+            var entities = await _context.Products.ToListAsync();
+            return entities.Select(u => new ProductDTO(u)).ToList();
         }
 
         public async Task<ProductDTO> Get(int id)
@@ -28,21 +29,25 @@ namespace APIServer.Services
             throw new NotImplementedException();
         }
 
-        public async Task<bool> Create(ProductDTO dto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> Update(int id, ProductDTO dto)
+        public async Task<bool> CreateOrUpdate(ProductDTO dto)
         {
             throw new NotImplementedException();
         }
 
         public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _context.Products.FindAsync(id);
+            if (entity == null)
+            {
+                return false;
+            }
+
+            _context.Products.Remove(entity);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
-        
+
         public bool IsExist(int id)
         {
             return _context.Products.Any(e => e.ID == id);

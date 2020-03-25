@@ -20,8 +20,8 @@ namespace APIServer.Services
 
         public async Task<List<CompanyDTO>> Get()
         {
-            var companies = await _context.Companies.ToListAsync();
-            return companies.Select(u => new CompanyDTO(u)).ToList();
+            var entities = await _context.Companies.ToListAsync();
+            return entities.Select(u => new CompanyDTO(u)).ToList();
         }
 
         public async Task<CompanyDTO> Get(int id)
@@ -33,7 +33,7 @@ namespace APIServer.Services
                 return null;
         }
 
-        public async Task<bool> Create(CompanyDTO dto)
+        public async Task<bool> CreateOrUpdate(CompanyDTO dto)
         {
             if (dto == null)
                 return false;
@@ -50,16 +50,20 @@ namespace APIServer.Services
             return result > 0;
         }
 
-        public async Task<bool> Update(int id, CompanyDTO dto)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _context.Companies.FindAsync(id);
+            if (entity == null)
+            {
+                return false;
+            }
+
+            _context.Companies.Remove(entity);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
-        
+
         public bool IsExist(int id)
         {
             return _context.Companies.Any(e => e.ID == id);

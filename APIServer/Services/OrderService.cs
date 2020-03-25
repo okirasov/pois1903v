@@ -20,29 +20,38 @@ namespace APIServer.Services
 
         public async Task<List<OrderDTO>> Get()
         {
-            throw new NotImplementedException();
+            var entities = await _context.Orders.ToListAsync();
+            return entities.Select(u => new OrderDTO(u)).ToList();
         }
 
         public async Task<OrderDTO> Get(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _context.Orders.FindAsync(id);
+            if (entity != null)
+                return new OrderDTO(entity);
+            else
+                return null;
         }
 
-        public async Task<bool> Create(OrderDTO dto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> Update(int id, OrderDTO dto)
+        public async Task<bool> CreateOrUpdate(OrderDTO dto)
         {
             throw new NotImplementedException();
         }
 
         public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _context.Orders.FindAsync(id);
+            if (entity == null)
+            {
+                return false;
+            }
+
+            _context.Orders.Remove(entity);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
-        
+
         public bool IsExist(int id)
         {
             return _context.Orders.Any(e => e.ID == id);

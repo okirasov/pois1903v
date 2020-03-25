@@ -51,8 +51,23 @@ namespace APIServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _baseService.Create(dto);
+            var result = await _baseService.CreateOrUpdate(dto);
 
+            if (result)
+                return Ok();
+            else
+                return NotFound();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _baseService.Delete(id);
             if (result)
                 return Ok();
             else

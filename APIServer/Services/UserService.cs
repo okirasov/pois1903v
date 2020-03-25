@@ -35,27 +35,73 @@ namespace APIServer.Services
                 return null;
         }
 
-        public async Task<bool> Create(UserDTO dto)
+        public async Task<bool> CreateOrUpdate(UserDTO dto)
         {
-            throw new NotImplementedException();
-        }
+            // for Update request only!!!
+            // check if User exists
+            if (dto.ID > 0 && !IsExist(dto.ID))
+            {
+                return false;
+            }
 
-        public async Task<bool> Update(int id, UserDTO dto)
-        {
-            throw new NotImplementedException();
+            var user = new User
+            {
+                ID = dto.ID,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Email = dto.Email
+            };
+
+            // Load Company
+            if (dto.CompanyID.HasValue)
+            {
+                var company = await _context.Companies.FindAsync(dto.CompanyID.Value);
+                if (company != null)
+                {
+                    user.Company = company;
+                }
+            }
+
+            // Update Request
+            if (dto.ID > 0)
+            {
+                _context.Entry(user).State = EntityState.Modified;
+            }
+            // Insert Request
+            else
+            {
+                _context.Users.Add(user);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _context.Users.FindAsync(id);
+            if (entity == null)
+            {
+                return false;
+            }
+
+            _context.Users.Remove(entity);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
 
-        public bool Login(string email, string password)
+        public async Task<bool> Login(string email, string password)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users
+                .Where(u => u.Email == email && u.Password == password)
+                .FirstOrDefaultAsync();
+
+            return user != null;
         }
-        
+
         public bool IsExist(int id)
         {
             return _context.Users.Any(e => e.ID == id);

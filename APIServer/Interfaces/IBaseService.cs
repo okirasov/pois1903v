@@ -10,8 +10,7 @@ namespace APIServer.Interfaces
         Task<List<DTO>> Get();
         Task<DTO> Get(int id);
         Task<bool> Delete(int id);
-        Task<bool> Create(DTO dto);
-        Task<bool> Update(int id, DTO dto);
+        Task<bool> CreateOrUpdate(DTO dto);
 
         bool IsExist(int id);
 

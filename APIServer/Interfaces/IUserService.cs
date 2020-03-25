@@ -8,6 +8,6 @@ namespace APIServer.Interfaces
 {
     public interface IUserService : IBaseService<UserDTO>
     {
-        bool Login(string email, string password);
+        Task<bool> Login(string email, string password);
     }
 }
