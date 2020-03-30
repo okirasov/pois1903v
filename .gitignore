@@ -53,6 +53,8 @@ APIServer/bin/Debug/netcoreapp2.1/APIServer.dll
 APIServer/bin/Debug/netcoreapp2.1/APIServer.pdb
 APIServer/bin/Debug/netcoreapp2.1/APIServer.runtimeconfig.dev.json
 APIServer/bin/Debug/netcoreapp2.1/APIServer.runtimeconfig.json
+APIServer/bin/
+APIServer/obj/
 .vs/APIServer/DesignTimeBuild/.dtbcache
 .vs/APIServer/v15/.suo
 .vs/APIServer/v15/Server/sqlite3/storage.ide
