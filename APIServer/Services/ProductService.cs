@@ -35,8 +35,10 @@ namespace APIServer.Services
 
         public async Task<bool> CreateOrUpdate(ProductDTO dto)
         {
-            if (dto == null)
+            if (dto.ID > 0 && !IsExist(dto.ID))
+            {
                 return false;
+            }
 
             var product = new Product
             {
@@ -44,10 +46,41 @@ namespace APIServer.Services
                 Price = dto.Price
             };
 
-            _context.Products.Add(product);
-            var result = await _context.SaveChangesAsync();
+            if (dto.CompanyID.HasValue)
+            {
+                var company = await _context.Companies.FindAsync(dto.CompanyID.Value);
+                if (company != null)
+                {
+                    product.Company = company;
+                }
+            }
 
-            return result > 0;
+            ///////// orders/////
+            if (dto.Orders.Any())
+            {
+                var orders = new List<Order>();
+                foreach (OrderDTO order in dto.Orders)
+                {
+                    orders.Add(await _context.Orders.FindAsync(order.OrderID));
+                }
+                if (orders.Any())
+                {
+                    product.Orders = orders;
+                }
+            }
+            /////////////////////
+
+
+            if (dto.ID > 0)
+            {
+                _context.Entry(product).State = EntityState.Modified;
+            }
+            else
+            {
+                _context.Products.Add(product);
+            }
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> Delete(int id)

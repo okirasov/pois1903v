@@ -35,20 +35,38 @@ namespace APIServer.Services
 
         public async Task<bool> CreateOrUpdate(OrderDTO dto)
         {
-            if (dto == null)
+            if (dto.ID > 0 && !IsExist(dto.ID))
+            {
                 return false;
+            }
 
             var order = new Order
             {
+                OrderID = dto.OrderID,
                 CreateDate = dto.CreateDate,
                 ShipDate = dto.ShipDate,
                 Price = dto.Price
             };
 
-            _context.Orders.Add(order);
-            var result = await _context.SaveChangesAsync();
+            if (dto.ProductID.HasValue)
+            {
+                var product = await _context.Products.FindAsync(dto.ProductID.Value);
+                if (product != null)
+                {
+                    order.Product = product;
+                }
+            }
 
-            return result > 0;
+            if (dto.ID > 0)
+            {
+                _context.Entry(order).State = EntityState.Modified;
+            }
+            else
+            {
+                _context.Orders.Add(order);
+            }
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> Delete(int id)
