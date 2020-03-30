@@ -35,7 +35,20 @@ namespace APIServer.Services
 
         public async Task<bool> CreateOrUpdate(OrderDTO dto)
         {
-            throw new NotImplementedException();
+            if (dto == null)
+                return false;
+
+            var order = new Order
+            {
+                CreateDate = dto.CreateDate,
+                ShipDate = dto.ShipDate,
+                Price = dto.Price
+            };
+
+            _context.Orders.Add(order);
+            var result = await _context.SaveChangesAsync();
+
+            return result > 0;
         }
 
         public async Task<bool> Delete(int id)

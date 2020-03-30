@@ -26,12 +26,28 @@ namespace APIServer.Services
 
         public async Task<ProductDTO> Get(int id)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products.FindAsync(id);
+            if (product != null)
+                return new ProductDTO(product);
+            else
+                return null;
         }
 
         public async Task<bool> CreateOrUpdate(ProductDTO dto)
         {
-            throw new NotImplementedException();
+            if (dto == null)
+                return false;
+
+            var product = new Product
+            {
+                Name = dto.Name,
+                Price = dto.Price
+            };
+
+            _context.Products.Add(product);
+            var result = await _context.SaveChangesAsync();
+
+            return result > 0;
         }
 
         public async Task<bool> Delete(int id)
