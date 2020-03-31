@@ -14,6 +14,8 @@ namespace APIServer.DTO
 
         public int? CompanyID { get; set; }
 
+        public List<OrderDTO> Orders { get; set; }
+
         public ProductDTO(Product p)
         {
             if (p != null)
@@ -24,5 +26,6 @@ namespace APIServer.DTO
                 CompanyID = p.Company?.ID;
             }
         }
+
     }
 }

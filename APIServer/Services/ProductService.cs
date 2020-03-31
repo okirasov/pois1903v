@@ -26,12 +26,61 @@ namespace APIServer.Services
 
         public async Task<ProductDTO> Get(int id)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products.FindAsync(id);
+            if (product != null)
+                return new ProductDTO(product);
+            else
+                return null;
         }
 
         public async Task<bool> CreateOrUpdate(ProductDTO dto)
         {
-            throw new NotImplementedException();
+            if (dto.ID > 0 && !IsExist(dto.ID))
+            {
+                return false;
+            }
+
+            var product = new Product
+            {
+                Name = dto.Name,
+                Price = dto.Price
+            };
+
+            if (dto.CompanyID.HasValue)
+            {
+                var company = await _context.Companies.FindAsync(dto.CompanyID.Value);
+                if (company != null)
+                {
+                    product.Company = company;
+                }
+            }
+
+            ///////// orders/////
+            if (dto.Orders.Any())
+            {
+                var orders = new List<Order>();
+                foreach (OrderDTO order in dto.Orders)
+                {
+                    orders.Add(await _context.Orders.FindAsync(order.OrderID));
+                }
+                if (orders.Any())
+                {
+                    product.Orders = orders;
+                }
+            }
+            /////////////////////
+
+
+            if (dto.ID > 0)
+            {
+                _context.Entry(product).State = EntityState.Modified;
+            }
+            else
+            {
+                _context.Products.Add(product);
+            }
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> Delete(int id)

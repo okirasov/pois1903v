@@ -35,7 +35,38 @@ namespace APIServer.Services
 
         public async Task<bool> CreateOrUpdate(OrderDTO dto)
         {
-            throw new NotImplementedException();
+            if (dto.ID > 0 && !IsExist(dto.ID))
+            {
+                return false;
+            }
+
+            var order = new Order
+            {
+                OrderID = dto.OrderID,
+                CreateDate = dto.CreateDate,
+                ShipDate = dto.ShipDate,
+                Price = dto.Price
+            };
+
+            if (dto.ProductID.HasValue)
+            {
+                var product = await _context.Products.FindAsync(dto.ProductID.Value);
+                if (product != null)
+                {
+                    order.Product = product;
+                }
+            }
+
+            if (dto.ID > 0)
+            {
+                _context.Entry(order).State = EntityState.Modified;
+            }
+            else
+            {
+                _context.Orders.Add(order);
+            }
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> Delete(int id)
